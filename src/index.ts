@@ -1,0 +1,29 @@
+import express, { Application, Request, Response } from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import connectDB from "./config/db.js"; // ⚠️ must include .js for ESM
+
+import authRoutes from "./routes/authRoutes.js";
+import postRoutes from "./routes/postRoutes.js";
+
+dotenv.config();
+
+const app: Application = express();
+
+// Connect DB
+connectDB();
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+app.use("/api/auth", authRoutes);
+app.use("/api/posts", postRoutes);
+
+// Test route
+app.get("/", (req: Request, res: Response) => {
+  res.send("API is running...");
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
